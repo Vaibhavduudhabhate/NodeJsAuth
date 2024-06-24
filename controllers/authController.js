@@ -51,10 +51,11 @@ async function login_get(req ,res){
 }
 
 async function signup_post(req ,res){
-    const { email,password} = req.body;
+    const { name,email,password} = req.body;
     try {
-        const user = await User.create({email,password});
+        const user = await User.create({name,email,password});
         // setting the token in the cookie or limited time,
+        console.log(user.name)
         const Token = createToken(user._id)
         res.cookie('jwt',Token,{httpOnly:true,maxAge:maxAge*1000});
         console.log('token generated successfully')
