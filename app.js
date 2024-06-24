@@ -3,15 +3,20 @@ const mongoose = require("mongoose");
 const app = express();
 const authRoutes = require('./routes/allroutes');
 const cookieParser = require('cookie-parser');
+const { requireAuth, checkUser } = require("./middleware/authMiddleware");
 const PORT = 3000;
 
 app.use(express.static('public'));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.set("view engine",'ejs');
 
+app.get('*',checkUser)
 app.get('/', (req, res) => {
     res.render('home');
+  });
+app.get('/dummy',requireAuth, (req, res) => {
+    res.render('dashboard');
   });
 app.use(authRoutes) 
 

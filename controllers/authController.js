@@ -5,6 +5,16 @@ const handleError =(err)=> {
     console.log(err.message,err.code);
     let errors = { email:'',password:'' };
 
+    // incorrect emails
+    if(err.message === "incorrect Email"){
+        errors.email ="that email is not registered";
+    }
+
+    // inorrect password
+    if(err.message === "incorrect Password"){
+        errors.password = "that password is incorrect";
+    }
+
     // duplicate error code 
     if(err.code === 11000){
         errors.email = 'that email id is already exists'
@@ -67,15 +77,21 @@ async function login_post(req ,res){
         res.status(200).json({user : user._id})
     } catch (error) {
         const errors = handleError(error)
-        res.status(400).json({})
+        res.status(400).json({errors})
     }
     // console.log(email,password);
     // await res.send('new login');
+}
+
+async function logout_get(req ,res){
+    res.cookie('jwt',"",{maxAge:1});
+    res.redirect('/')
 }
 
 module.exports = {
     signup_get,
     login_get,
     signup_post,
-    login_post
+    login_post,
+    logout_get,
 }
